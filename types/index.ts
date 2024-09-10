@@ -11,7 +11,13 @@ export type TestWord = {
   color: PersonalityColor;
 };
 
-export type TestWordGroup = TestWord[];
+export type TestQuestion = {
+  id: number;
+  question: string;
+  options: TestWord[];
+};
+
+export type TestWordGroup = TestQuestion[];
 
 export type PersonalityTestResponse = Map<number, number>;
 

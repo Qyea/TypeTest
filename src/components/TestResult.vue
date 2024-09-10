@@ -104,8 +104,8 @@ const buildTestResult = () => {
       return;
     }
 
-    const colorEnumKey: PersonalityColor = item.color;
-    result.value[colorEnumKey] += 1;
+    //const colorEnumKey: PersonalityColor = item;
+    //result.value[colorEnumKey] += 1;
   });
 
   const keys = Object.keys(result.value) as PersonalityColor[];

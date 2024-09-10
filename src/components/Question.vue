@@ -10,25 +10,24 @@
         :format="getProgressLabel"
         striped
       />
-      <p>Select one word or phrase:</p>
+
       <TransitionGroup class="q-list" name="list" tag="ul">
-        <el-button
-          v-for="(item, index) in currentGroup"
+        <p>{{ currentGroup?.question }}</p>
+        <button
+          v-for="(item, index) in currentGroup?.options"
           :key="`${item.id}-${index}`"
-          :variant="isWordSelected(item) ? 'success' : 'primary'"
           text
-          @click.prevent="onSelectWord(item)"
         >
           {{ item.word }}
-        </el-button>
+        </button>
       </TransitionGroup>
     </div>
-    <personality-test-result-view
+    <!-- <personality-test-result-view
       v-if="store.groupNumber === groups.length"
       :response="store.selection"
       :groups="groups"
       v-on:review-test="onReviewTest"
-    />
+    /> -->
   </div>
 </template>
 
@@ -37,12 +36,12 @@ import { ref, watch, onMounted } from "vue";
 
 import { questionGroups } from "./../data/questions";
 import PersonalityTestResultView from "./TestResult.vue";
-import { TestWordGroup, TestWord } from "../../types";
+import { TestWordGroup, TestWord, TestQuestion } from "../../types";
 import { usePersonalityTestStore } from "../store/test";
 
 const store = usePersonalityTestStore();
 
-let currentGroup = ref<TestWordGroup | null>(null);
+let currentGroup = ref<TestQuestion | null>(null);
 let progressValue = ref(0);
 const groups = questionGroups;
 
@@ -52,7 +51,7 @@ const setProgress = () => {
     return;
   }
 
-  currentGroup.value = groups[store.groupNumber];
+  currentGroup.value = groups[store.groupNumber] ?? null;
   progressValue.value = parseFloat(
     (((store.groupNumber + 1) / groups.length) * 100).toFixed(2)
   );
@@ -95,28 +94,30 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.questions {
+// .questions {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+
+//   background-color: var(--el-bg-color);
+//   border: var(--el-border);
+
+//   margin: 2rem 2rem;
+// }
+
+.q-list {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  background-color: var(--el-bg-color);
-  border: var(--el-border);
-
-  margin: 2rem 2rem;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.q-list {
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
-}
-
-.word-group-container {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 0 0 0;
-}
+// .word-group-container {
+//   display: flex;
+//   flex-direction: column;
+//   padding: 2rem 0 0 0;
+// }
 
 .list-enter-active {
   transition: opacity 1.2s;
