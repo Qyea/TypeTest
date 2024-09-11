@@ -1,6 +1,7 @@
 <template>
   <div class="scrollable">
-    <h5>YELLOW personality traits</h5>
+    <h2>Вау, так вот как выглядят эти люди</h2>
+    <img src="/public/images/sublimepng.png" alt="vscode" width="150px" />
     <p class="text-justify">
       YELLOWS are the life and soul of the party, they are sociable, expressive,
       very imaginative and enthusiastic with it. YELLOWS are very informal, very

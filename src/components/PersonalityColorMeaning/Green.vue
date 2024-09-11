@@ -1,6 +1,7 @@
 <template>
   <div class="scrollable">
-    <h5>GREEN personality traits</h5>
+    <h2>А вы... Сильны духом... Мистер Блокнот</h2>
+    <img src="/public/images/notepad.png" alt="vscode" width="270px" />
     <p class="text-justify">
       Cool laid back relaxed and patient best describes the personality traits
       of the GREEN. They are easy to get along with and very informal in their

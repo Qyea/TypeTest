@@ -63,18 +63,9 @@ export const questionGroups: TestQuestion[] = [
       },
     ],
   },
+
   {
     id: 4,
-    question: "",
-    options: [
-      { id: 37, word: "logical", color: PersonalityColor.Green },
-      { id: 38, word: "contented", color: PersonalityColor.Blue },
-      { id: 39, word: "friendly", color: PersonalityColor.Yellow },
-      { id: 40, word: "bold/audacious", color: PersonalityColor.Red },
-    ],
-  },
-  {
-    id: 5,
     question: "",
     options: [
       {
@@ -100,7 +91,7 @@ export const questionGroups: TestQuestion[] = [
     ],
   },
   {
-    id: 6,
+    id: 5,
     question: "",
     options: [
       {
@@ -126,7 +117,7 @@ export const questionGroups: TestQuestion[] = [
     ],
   },
   {
-    id: 7,
+    id: 6,
     question: "",
     options: [
       { id: 21, word: "Сладкий", color: PersonalityColor.Green },
@@ -136,7 +127,7 @@ export const questionGroups: TestQuestion[] = [
     ],
   },
   {
-    id: 8,
+    id: 7,
     question: "",
     options: [
       { id: 25, word: "Чезабретто.", color: PersonalityColor.Yellow },
@@ -154,7 +145,7 @@ export const questionGroups: TestQuestion[] = [
     ],
   },
   {
-    id: 9,
+    id: 8,
     question: "",
     options: [
       {
@@ -177,16 +168,6 @@ export const questionGroups: TestQuestion[] = [
         word: "Пропустишь этот момент и согласишься с мнением собеседника.",
         color: PersonalityColor.Blue,
       },
-    ],
-  },
-  {
-    id: 10,
-    question: "",
-    options: [
-      { id: 33, word: "daring", color: PersonalityColor.Red },
-      { id: 34, word: "idealist", color: PersonalityColor.Blue },
-      { id: 35, word: "dutiful", color: PersonalityColor.Green },
-      { id: 36, word: "playful", color: PersonalityColor.Yellow },
     ],
   },
 ];

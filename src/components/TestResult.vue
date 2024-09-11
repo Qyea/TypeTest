@@ -42,6 +42,7 @@ import {
   PersonalityTestResult,
   PersonalityColor,
   TestWordGroup,
+  TestQuestion,
 } from "../../types";
 
 const Tabs = [
@@ -64,7 +65,7 @@ const Tabs = [
 ];
 
 const props = defineProps<{
-  groups: TestWordGroup[];
+  groups: TestQuestion[];
   response: PersonalityTestResponse;
 }>();
 
@@ -97,13 +98,13 @@ const chartOptions = {
 };
 
 const buildTestResult = () => {
+  console.log(props.groups, props.response);
+
   props.response.forEach((value, key) => {
-    const item = props.groups[key].find((groupItem) => groupItem.id === value);
-
-    if (!item) {
-      return;
-    }
-
+    //const item = props.groups[key].find((groupItem) => groupItem.id === value);
+    // if (!item) {
+    //   return;
+    // }
     //const colorEnumKey: PersonalityColor = item;
     //result.value[colorEnumKey] += 1;
   });

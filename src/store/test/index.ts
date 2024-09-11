@@ -20,6 +20,16 @@ export const usePersonalityTestStore = defineStore("personalityTest", {
     addSelection(payload: AddSelectionPayload) {
       this.selection.set(payload.groupId, payload.value);
     },
+    buildTestResult(num: number, signs: string) {
+      // const item = this.selection[key].find(
+      //   (groupItem) => groupItem.id === value
+      // );
+      // if (!item) {
+      //   return;
+      // }
+      // const colorEnumKey: PersonalityColor = item;
+      // result.value[colorEnumKey] += 1;
+    },
   },
 });
 

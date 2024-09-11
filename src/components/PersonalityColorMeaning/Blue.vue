@@ -1,6 +1,7 @@
 <template>
   <div class="scrollable">
-    <h5>BLUE personality traits</h5>
+    <h2>VS CODE</h2>
+    <img src="/public/images/vscode.png" alt="vscode" width="300px" />
     <p class="text-justify">
       BLUES are deep thinkers, analytical in nature, very detail focused and
       formal in their thinking. They can come across as being aloof, but are

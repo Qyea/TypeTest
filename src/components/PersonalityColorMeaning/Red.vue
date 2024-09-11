@@ -1,6 +1,7 @@
 <template>
   <div class="scrollable">
-    <h5>RED personality traits</h5>
+    <h2>Доброго времени суток, мажор</h2>
+    <img src="/public/images/charm.png" alt="vscode" width="150px" />
     <p class="text-justify">
       They are strong leaders, fast paced thinkers, risk takers, purposeful,
       drivers, strong-willed, less patient, obvious energy, formal overtly

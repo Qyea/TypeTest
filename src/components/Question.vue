@@ -1,6 +1,6 @@
 <template>
   <div class="questions">
-    <h1>The Quiz</h1>
+    <h1>Тест на тип личности (IDE версия)</h1>
     <div
       class="word-group-container"
       v-if="store.groupNumber !== groups.length"
@@ -11,23 +11,24 @@
         striped
       />
 
+      <p>{{ currentGroup?.question }}</p>
+
       <TransitionGroup class="q-list" name="list" tag="ul">
-        <p>{{ currentGroup?.question }}</p>
         <button
           v-for="(item, index) in currentGroup?.options"
           :key="`${item.id}-${index}`"
-          text
+          @click="onSelectWord(item)"
         >
           {{ item.word }}
         </button>
       </TransitionGroup>
     </div>
-    <!-- <personality-test-result-view
+    <personality-test-result-view
       v-if="store.groupNumber === groups.length"
       :response="store.selection"
       :groups="groups"
       v-on:review-test="onReviewTest"
-    /> -->
+    />
   </div>
 </template>
 
@@ -36,7 +37,7 @@ import { ref, watch, onMounted } from "vue";
 
 import { questionGroups } from "./../data/questions";
 import PersonalityTestResultView from "./TestResult.vue";
-import { TestWordGroup, TestWord, TestQuestion } from "../../types";
+import { TestWord, TestQuestion } from "../../types";
 import { usePersonalityTestStore } from "../store/test";
 
 const store = usePersonalityTestStore();
