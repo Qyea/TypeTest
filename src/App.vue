@@ -1,9 +1,9 @@
 <template>
-  <Question />
+  <Pet />
 </template>
 
 <script setup lang="ts">
-import Question from "./components/Question.vue";
+import Pet from "./components/pet.vue";
 </script>
 
 <style scoped>
