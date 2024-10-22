@@ -1,63 +1,96 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: aliceblue;
+  flex-direction: column;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+
   background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  display: flex;
-
-  min-width: 500px;
-  min-height: 100vh;
-}
-
-button {
-  width: 600px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  margin-bottom: 0.5rem;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  align-self: center;
-}
-button:hover {
-  background-color: rgb(43, 44, 71);
-}
-button:focus,
-button:focus-visible {
-  border: none;
-  outline: 4px solid rgb(43, 44, 71);
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-ul {
-  padding: 0;
-}
-li {
-  margin: 0;
-}
-
-#app {
-  margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+
+  margin-bottom: 1rem;
+}
+#question-container {
+  font-size: 20px;
+}
+#logs-container {
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  width: 500px;
+
+  text-align: center;
+  margin-bottom: 30px;
+  background-color: #242424;
+}
+h1 {
+  text-align: center;
+}
+.question {
+  margin: 20px 0;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+}
+.options button {
+  font-size: 18px;
+  margin: 5px 0;
+  padding: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.options button:hover {
+  background-color: #0056b3;
+}
+.result {
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: 007bff;
+  font-size: 20px;
+}
+
+.show-logs-btn,
+.hide-logs-btn,
+.restart-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 25px;
+}
+.show-logs-btn,
+.hide-logs-btn {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.p {
+  font-family: "Classic Console Neue";
 }

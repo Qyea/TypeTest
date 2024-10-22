@@ -1,9 +1,10 @@
 <template>
-  <Pet />
+  <MainPage />
 </template>
 
 <script setup lang="ts">
-import Pet from "./components/pet.vue";
+import "element-plus/theme-chalk/dark/css-vars.css";
+import MainPage from "./components/index.vue";
 </script>
 
 <style scoped>
