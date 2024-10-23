@@ -2,12 +2,14 @@
   <div class="container">
     <h1>Растения</h1>
     <label for="answer-input">
-      {{
-        !isStarted
-          ? 'Введите начальный признак ("тип", "класс", "семейство")'
-          : question
-      }}
+      {{ !isStarted ? "Выберете начальный признак" : question }}
     </label>
+    <el-radio-group v-model="featureTypes">
+      <el-radio-button label="Тип" value="тип" />
+      <el-radio-button label="Класс" value="класс" />
+      <el-radio-button label="Семейство" value="семейство" />
+    </el-radio-group>
+    <el-text>Начальные признаки: {{ dictValues[featureTypes] }}</el-text>
     <el-input
       v-model="initialFeatureInput"
       id="answer-input"
@@ -22,6 +24,7 @@
     >
       Ответить
     </el-button>
+
     <div v-if="result" id="result" class="result">
       Признак: {{ result.feature }}, Значение: {{ result.value }}
     </div>
@@ -34,7 +37,11 @@
     <el-button @click="hideLogs">Скрыть все логи</el-button>
   </div>
 
-  <div id="logs-container" v-if="logsHtml" v-html="logsHtml"></div>
+  <div
+    :class="['logs-container', logsHtml ? 'active' : '']"
+    id="logs-container"
+    v-html="logsHtml"
+  ></div>
 </template>
 
 <script setup lang="ts">
@@ -51,24 +58,39 @@ interface Feature {
   isFinal: boolean;
 }
 
+interface FeatureShortInfo {
+  featureName: string;
+  value: string;
+}
+
 const rows = 10;
 const cols = values.length;
+
 let table = reactive<Feature[][]>([]); // Таблица
 let tGoals = reactive<Feature[][]>([]); // Цели
-let target = reactive<string[]>([]); // Текущие цели
+
+let target = reactive<FeatureShortInfo[]>([]); // Текущие цели
 const results = reactive<{ feature: string; value: string }[]>([]); // Результаты
+
 const contextStack = reactive<string[]>([]); // Логи
 
 const question = ref("");
 
 const initialFeatureInput = ref<string>(""); // Поле для ввода начального признака
-const currentFeature = ref<any>(""); // Текущий признак
+const currentFeature = ref<FeatureShortInfo>({
+  featureName: "",
+  value: "",
+});
+
 const indicesToDeleteGoals = ref<number[]>([]);
 const indicesToDeleteTable = ref<number[]>([]);
+
 const result = ref<{ feature: string; value: string }>(); // Результат
 const logsHtml = ref<string>(""); // Логи в HTML формате
 
 const isStarted = ref<boolean>(false);
+
+const featureTypes = ref("тип");
 
 const isFinalFeature = (feature: string): boolean => {
   return ["класс", "семейство", "тип"].includes(feature);
@@ -96,6 +118,24 @@ const getUserInput = (featureName: string): Promise<string> => {
         resolve("");
       });
   });
+};
+
+const isInAPos = (featureName: string, rule: Feature[]) => {
+  for (let j = 0; j < cols; j++) {
+    if (rule[j].featureName === featureName && rule[j].sign === "-") {
+      return { is: true, index: j };
+    }
+  }
+  return { is: false };
+};
+
+const isInAFinal = (featureName: string, rule: Feature[]) => {
+  for (let j = 0; j < cols; j++) {
+    if (rule[j].featureName === featureName && rule[j].sign === "+") {
+      return { is: true, index: j };
+    }
+  }
+  return { is: false };
 };
 
 for (let i = 0; i < rows; i++) {
@@ -136,8 +176,11 @@ rules.forEach((rule, index) => {
 });
 
 const giveAnswer = async () => {
-  if (initialFeatureInput.value) {
-    const initialFeature = initialFeatureInput.value;
+  if (featureTypes.value && initialFeatureInput.value) {
+    const initialFeature = {
+      featureName: featureTypes.value,
+      value: initialFeatureInput.value,
+    };
 
     target.push(initialFeature);
     await stepOneOne();
@@ -153,7 +196,8 @@ const stepOneOne = async () => {
   for (let i = 0; i < table.length; i++) {
     for (let j = 0; j < cols; j++) {
       if (
-        table[i][j].featureName === currentFeature.value &&
+        table[i][j].featureName === currentFeature.value.featureName &&
+        table[i][j].value === currentFeature.value.value &&
         table[i][j].sign === "+"
       ) {
         tGoals.push(table[i]);
@@ -161,7 +205,11 @@ const stepOneOne = async () => {
     }
   }
 
-  logContext(1.1, `Текущий признак: ${currentFeature.value}`);
+  logContext(
+    1.1,
+    ` <p>Текущий признак: ${currentFeature.value.featureName},</p>
+              <p>Текущее значение: ${currentFeature.value.value}</p>`
+  );
 
   if (tGoals.length === 0) {
     stepOneTwo();
@@ -171,7 +219,12 @@ const stepOneOne = async () => {
 };
 
 const stepOneTwo = () => {
-  logContext(1.2, `Текущий признак: ${currentFeature.value}`);
+  logContext(
+    1.2,
+    ` <p>Текущий признак:${currentFeature.value.featureName},</p>
+              <p>Текущее значение: ${currentFeature.value.value}</p>`
+  );
+
   ElMessage.error(
     "Ответ не может быть получен т.к. отсутствуют правила, соответствующие текущему признаку"
   );
@@ -199,21 +252,18 @@ const stepTwo = () => {
     }
   }
 
-  logContext(2, `Номер правила: ${min_i}`);
+  logContext(2, `Номер правила:${min_i}`);
 
   if (minNumMinuses > 0) {
     stepThree(min_i);
-  } else {
+  } else if (minNumMinuses === 0) {
     results.push({
       feature: tGoals[min_i][min_j].featureName,
       value: tGoals[min_i][min_j].value,
     });
-
-    if (target.length === 0) {
-      stepFive();
-    } else {
-      stepFour();
-    }
+    console.log(results);
+    if (target.length === 0) stepFive();
+    else if (target.length > 0) stepFour();
   }
 };
 
@@ -221,48 +271,34 @@ const stepThree = async (ruleIndex: number) => {
   const firstFeature = tGoals[ruleIndex].find(
     (feature) => feature.sign === "-"
   )!;
+
   logContext(
     3,
-    `1-ый признак в анализируемом правиле: ${firstFeature.featureName}`
+    `<p>1-ый признак в анализируемом правиле:</p> ${firstFeature.featureName},<br/>
+              <p>Значение 1-го признака:</p> ${firstFeature.value}`
   );
+
   if (!firstFeature.isFinal) {
-    const answer = await getUserInput(firstFeature.featureName);
-    results.push({ feature: firstFeature.featureName, value: answer });
+    results.push({
+      feature: firstFeature.featureName,
+      value: firstFeature.value,
+    });
+
+    const logMessage = `<b>Номер шага:</b> ${3},<br/>
+              <b>Текущие результаты:</b> ${JSON.stringify(results)},<br/>`; // хз как вывести T_Goals
+
+    contextStack.push(logMessage);
+
     stepFour();
   } else {
-    currentFeature.value = firstFeature.featureName;
+    currentFeature.value = {
+      featureName: firstFeature.featureName,
+      value: firstFeature.value,
+    };
     target.push(currentFeature.value);
-    tGoals.length = 0;
-    await stepOneOne();
+    tGoals = [];
+    stepOneOne();
   }
-  // const firstFeatureIndex = tGoals[ruleIndex].findIndex((feature) => {
-  //   return feature.sign === "-";
-  // });
-  // const firstFeature = tGoals[ruleIndex][firstFeatureIndex]; // feature A_v
-  // const logMessage = `<b>Номер шага:</b> ${3},<br/>
-  //               <b>1-ый признак в анализируемом правиле:</b> ${
-  //                 firstFeature.featureName
-  //               },<br/>
-  //               <b>Значение 1-го признака:</b> ${firstFeature.value}<br/>`; // хз как вывести T_Goals
-  // contextStack.push(logMessage);
-  // if (!firstFeature.isFinal) {
-  //   results.push({
-  //     feature: firstFeature.featureName,
-  //     value: firstFeature.value,
-  //   });
-  //   const logMessage = `<b>Номер шага:</b> ${3},<br/>
-  //               <b>Текущие результаты:</b> ${JSON.stringify(results)},<br/>`; // хз как вывести T_Goals
-  //   contextStack.push(logMessage);
-  //   stepFour();
-  // } else {
-  //   currentFeature.value = {
-  //     feature: firstFeature.featureName,
-  //     value: firstFeature.value,
-  //   };
-  //   target.push(currentFeature.value);
-  //   tGoals = [];
-  //   stepOneOne();
-  // }
 };
 
 const stepFourTwo = () => {
@@ -290,21 +326,21 @@ const stepFourTwo = () => {
 };
 
 const stepFourThree = () => {
-  const logMessage = `
-  <div>
-  <div>
-    <p>Номер шага:</p> ${4.3},
-  </div>
-  <p>Стэк St_target:${target}</p>,
-  </div>`;
+  logContext(4.3, ` <p>Стэк St_target: ${JSON.stringify(target)}</p>`);
 
-  contextStack.push(logMessage);
+  const justKnew = results[results.length - 1];
+  if (
+    currentFeature.value.featureName === justKnew.feature &&
+    currentFeature.value.value === justKnew.value
+  ) {
+    target = target.filter(
+      (targetFeature) =>
+        !(
+          targetFeature.featureName === currentFeature.value.featureName &&
+          targetFeature.value === currentFeature.value.value
+        )
+    );
 
-  console.log("four three");
-  const justKnew = results[results.length - 1].feature;
-  if (currentFeature.value === justKnew) {
-    target = target.filter((feature) => feature !== currentFeature.value);
-    console.log(target);
     if (target.length === 0) stepFive();
     else stepOneOne();
   } else {
@@ -316,12 +352,8 @@ const stepFourThree = () => {
 const stepFour = () => {
   let A_v_pair = results[results.length - 1];
 
-  const logMessage = `<div><p>Номер шага:</p> ${4},</div>
-                <p>Полученная информация:</p> ${JSON.stringify(
-                  A_v_pair
-                )},<br/>`;
+  logContext(4, `<p>Полученная информация:${JSON.stringify(A_v_pair)}</p>`);
 
-  contextStack.push(logMessage);
   for (let P_u = 0; P_u < tGoals.length; P_u++) {
     console.log(tGoals[P_u]);
 
@@ -365,11 +397,14 @@ const stepFour = () => {
 
 const stepFive = () => {
   result.value = results[results.length - 1];
-  logContext(5, `Итоговые результаты: ${JSON.stringify(result.value)}`);
+
+  logContext(5, `<p>Итоговые результаты: ${JSON.stringify(results)}</p>`);
 };
 
 const logContext = (step: number, message: string) => {
-  const logMessage = `<div> <p>Номер шага:${step}</p>, </div><p>${message}</p><br/><br/>`;
+  const logMessage = `<p>Номер шага:${step},</p>
+  ${message}`;
+
   contextStack.push(logMessage);
 };
 
