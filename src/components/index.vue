@@ -6,8 +6,8 @@
     </label>
     <el-radio-group v-model="featureTypes">
       <el-radio-button label="Тип" value="тип" />
-      <el-radio-button label="Класс" value="класс" />
       <el-radio-button label="Семейство" value="семейство" />
+      <el-radio-button label="Класс" value="класс" />
     </el-radio-group>
     <el-text>Начальные признаки: {{ dictValues[featureTypes] }}</el-text>
     <el-input
@@ -26,7 +26,9 @@
     </el-button>
 
     <div v-if="result" id="result" class="result">
-      Признак: {{ result.feature }}, Значение: {{ result.value }}
+      <p v-for="res in results">
+        Признак: {{ res.feature }}, Значение: {{ res.value }}
+      </p>
     </div>
   </div>
 
